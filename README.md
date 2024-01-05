@@ -1,5 +1,35 @@
 # 1️⃣🐝🏎️ The One Billion Row Challenge
 
+## .NET Version
+
+Results on my Apple M2 Pro.
+
+Java 21:
+
+```sh
+./calculate_average_baseline.sh
+...
+real	2m48.335s
+user	2m42.343s
+sys	0m7.165s
+```
+
+.NET 8, just plain `Release` build:
+
+```sh
+./calculate_average_dotnet.sh
+...
+real	1m59.220s
+user	5m8.463s
+sys	0m32.651s
+```
+
+Some notes on the .NET version:
+
+* The alphabetically sorted output is different from the Java version. I believe the .NET appears to be more "correct" as the non-ASCII characters are sorted correctly.
+
+## Original Text Below!
+
 _Status Jan 1: This challenge is [open for submissions](https://www.morling.dev/blog/one-billion-row-challenge/)!_
 
 The One Billion Row Challenge (1BRC) is a fun exploration of how far modern Java can be pushed for aggregating one billion rows from a text file.
