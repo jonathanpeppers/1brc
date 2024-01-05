@@ -6,7 +6,7 @@ var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
 
 while (!reader.EndOfStream)
 {
-    var line = await reader.ReadLineAsync();
+    var line = reader.ReadLine();
     if (line == null)
         continue;
     int index = line.IndexOf(';');
