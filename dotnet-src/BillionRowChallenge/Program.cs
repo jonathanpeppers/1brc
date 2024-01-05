@@ -29,9 +29,12 @@ foreach (var measurement in measurements.OrderBy(x => x.Key))
     if (first)
     {
         first = false;
+    }
+    else
+    {
         Console.Write(", ");
     }
-    Console.Write($"{measurement.Key}={measurement.Value.Min}/{measurement.Value.Mean}/{measurement.Value.Max}");
+    Console.Write($"{measurement.Key}={measurement.Value.Min:0.#}/{measurement.Value.Mean:0.#}/{measurement.Value.Max:0.#}");
 }
 Console.WriteLine('}');
 
