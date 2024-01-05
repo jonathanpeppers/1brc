@@ -24,16 +24,16 @@ while (!reader.EndOfStream)
 
 Console.Write('{');
 bool first = true;
-foreach (var measurement in measurements)
+foreach (var measurement in measurements.OrderBy(x => x.Key))
 {
-    if (!first)
+    if (first)
     {
         first = false;
         Console.Write(", ");
     }
     Console.Write($"{measurement.Key}={measurement.Value.Min}/{measurement.Value.Mean}/{measurement.Value.Max}");
 }
-Console.Write('}');
+Console.WriteLine('}');
 
 class Measurement
 {
