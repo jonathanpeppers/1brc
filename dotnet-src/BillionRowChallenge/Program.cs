@@ -4,14 +4,18 @@ using var reader = new StreamReader(stream);
 
 var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
 
+// Define variables outside of the loop
+string line;
+int index;
+string name;
+float value;
+
 while (!reader.EndOfStream)
 {
-    var line = reader.ReadLine();
-    if (line == null)
-        continue;
-    int index = line.IndexOf(';');
-    string name = line.Substring(0, index);
-    float value = float.Parse(line.Substring(index + 1));
+    line = reader.ReadLine()!;
+    index = line.IndexOf(';');
+    name = line[..index];
+    value = float.Parse(line[(index + 1)..]);
     if (measurements.TryGetValue(name, out var m))
     {
         m.Add(value);
