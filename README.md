@@ -19,9 +19,9 @@ sys	0m7.165s
 ```sh
 ./calculate_average_dotnet.sh
 ...
-real	1m3.485s
-user	0m59.248s
-sys	0m3.996s
+real	1m22.586s
+user	1m1.053s
+sys	0m6.438s
 ```
 
 Some notes on the .NET version:

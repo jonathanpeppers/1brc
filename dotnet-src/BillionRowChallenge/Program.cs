@@ -1,5 +1,6 @@
 ﻿
 // https://github.com/CarlVerret/csFastFloat
+using System.IO.MemoryMappedFiles;
 using csFastFloat;
 
 var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
@@ -7,9 +8,14 @@ var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
 // Define variables outside of the loop
 int index;
 string name;
+string? line;
 float value;
 
-foreach (string line in File.ReadLines("./measurements.txt"))
+using var file = MemoryMappedFile.CreateFromFile("./measurements.txt", FileMode.Open);
+using var stream = file.CreateViewStream();
+using var reader = new StreamReader(stream);
+
+while ((line = reader.ReadLine()) != null)
 {
     index = line.IndexOf(';');
     name = line[..index];
