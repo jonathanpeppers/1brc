@@ -1,28 +1,81 @@
 ﻿
 // https://github.com/CarlVerret/csFastFloat
+using System.Text;
 using csFastFloat;
 
+const int BufferSize = 64 * 1024;
+var buffer = new byte[BufferSize];
+var chars = new char[1024];
 var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
+var encoding = Encoding.UTF8;
 
 // Define variables outside of the loop
 int index;
 string name;
+Span<byte> chunk;
+ReadOnlySpan<char> line = chars.AsSpan();
+int lineLength;
 float value;
+int bytes;
+int offset = 0;
 
-foreach (string line in File.ReadLines("./measurements.txt"))
+using var stream = File.OpenRead("./measurements.txt");
+
+do
 {
-    index = line.IndexOf(';');
-    name = line[..index];
-    value = FastFloatParser.ParseFloat(line[(index + 1)..]);
-    if (measurements.TryGetValue(name, out var m))
+READ:
+    bytes = stream.Read(buffer, offset, BufferSize - offset);
+    if (bytes > 0)
     {
-        m.Add(value);
+        chunk = buffer.AsSpan();
+
+        do
+        {
+            if (offset == BufferSize)
+            {
+                offset = 0;
+                goto READ;
+            }
+
+            // Find the next newline
+            index = chunk.IndexOf((byte)'\n');
+            if (index == -1)
+            {
+                // No \n found, so copy the last partial line to the beginning of the buffer
+                chunk[offset..].CopyTo(buffer);
+                offset += bytes;
+                goto READ;
+            }
+            lineLength = encoding.GetChars(chunk[..index], chars.AsSpan());
+
+            // Advance chunk
+            chunk = chunk[(index + 1)..];
+
+            // Now find ; within the line
+            index = line.IndexOf(';');
+            if (index == -1)
+            {
+                // No ; found, so copy the last partial line to the beginning of the buffer
+                chunk[offset..].CopyTo(buffer);
+                offset += bytes;
+                goto READ;
+            }
+            name = line[..index].ToString();
+            value = FastFloatParser.ParseFloat(line[(index + 1)..lineLength]);
+            if (measurements.TryGetValue(name, out var m))
+            {
+                m.Add(value);
+            }
+            else
+            {
+                measurements.Add(name, new Measurement(value));
+            }
+        } while (true);
+
+        // if we get here, reset offset
+        offset = 0;
     }
-    else
-    {
-        measurements.Add(name, new Measurement(value));
-    }
-}
+} while (bytes > 0);
 
 // Print output, this part is not really performance critical
 Console.Write('{');
