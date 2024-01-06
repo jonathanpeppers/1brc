@@ -2,20 +2,15 @@
 // https://github.com/CarlVerret/csFastFloat
 using csFastFloat;
 
-using var stream = File.OpenRead("./measurements.txt");
-using var reader = new StreamReader(stream);
-
 var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
 
 // Define variables outside of the loop
-string line;
 int index;
 string name;
 float value;
 
-while (!reader.EndOfStream)
+foreach (string line in File.ReadLines("./measurements.txt"))
 {
-    line = reader.ReadLine()!;
     index = line.IndexOf(';');
     name = line[..index];
     value = FastFloatParser.ParseFloat(line[(index + 1)..]);
