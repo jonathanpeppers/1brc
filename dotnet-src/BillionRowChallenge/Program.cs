@@ -24,6 +24,7 @@ foreach (string line in File.ReadLines("./measurements.txt"))
     }
 }
 
+// Print output, this part is not really performance critical
 Console.Write('{');
 bool first = true;
 foreach (var measurement in measurements.OrderBy(x => x.Key))
@@ -52,15 +53,21 @@ class Measurement
     {
         Count++;
         Total += value;
-        Min = Math.Min(Min, value);
-        Max = Math.Max(Max, value);
+        if (value < Min)
+        {
+            Min = value;
+        }
+        if (value > Max)
+        {
+            Max = value;
+        }
     }
 
-    public float Min { get; set; }
+    public float Min;
 
-    public int Count { get; set; }
-    public float Total { get; set; }
-    public float Max { get; set; }
+    public int Count;
+    public float Total;
+    public float Max;
 
     public float Mean => Total / Count;
 }
