@@ -7,9 +7,13 @@ var measurements = new Dictionary<string, Measurement>(StringComparer.Ordinal);
 // Define variables outside of the loop
 int index;
 string name;
+string? line;
 float value;
 
-foreach (string line in File.ReadLines("./measurements.txt"))
+using var stream = File.OpenRead("./measurements.txt");
+using var reader = new StreamReader(stream, System.Text.Encoding.UTF8, false, 1024 * 1024);
+
+while ((line = reader.ReadLine()) != null)
 {
     index = line.IndexOf(';');
     name = line[..index];
