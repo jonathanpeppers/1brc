@@ -1,4 +1,7 @@
 ﻿
+// https://github.com/CarlVerret/csFastFloat
+using csFastFloat;
+
 using var stream = File.OpenRead("./measurements.txt");
 using var reader = new StreamReader(stream);
 
@@ -15,7 +18,7 @@ while (!reader.EndOfStream)
     line = reader.ReadLine()!;
     index = line.IndexOf(';');
     name = line[..index];
-    value = float.Parse(line[(index + 1)..]);
+    value = FastFloatParser.ParseFloat(line[(index + 1)..]);
     if (measurements.TryGetValue(name, out var m))
     {
         m.Add(value);
